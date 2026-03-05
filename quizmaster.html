@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>QuizMaster Pro — Live Quiz Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Righteous&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --blue:#2563FF; --purple:#7C3AED; --pink:#F0047F; --orange:#FF6B00;
+  --green:#00C853; --yellow:#FFD600; --red:#FF3B3B;
+  --bg:#F0F4FF; --white:#fff; --dark:#1A1A2E; --gray:#6B7280;
+  --card:#fff; --border:#E5E7EB;
+  --grad1: linear-gradient(135deg,#2563FF,#7C3AED);
+  --grad2: linear-gradient(135deg,#F0047F,#FF6B00);
+  --grad3: linear-gradient(135deg,#00C853,#2563FF);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;overflow-x:hidden;}
+.hidden{display:none!important;}
+
+/* ===== SCREENS ===== */
+.screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+
+/* ===== LANDING ===== */
+#landingScreen{
+  background: linear-gradient(135deg,#1A1A2E 0%,#16213E 50%,#0F3460 100%);
+  position:relative; overflow:hidden;
+}
+#landingScreen::before{
+  content:'';position:absolute;inset:0;
+  background: radial-gradient(circle at 20% 50%, rgba(37,99,255,0.3) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(124,58,237,0.3) 0%, transparent 50%),
+              radial-gradient(circle at 60% 80%, rgba(240,4,127,0.2) 0%, transparent 50%);
+  pointer-events:none;
+}
+.landing-box{
+  text-align:center; z-index:1; max-width:520px; width:100%;
+  animation: popIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes popIn{from{opacity:0;transform:scale(0.8) translateY(30px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.logo-mark{
+  width:90px;height:90px;background:var(--grad1);border-radius:24px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.8rem;margin:0 auto 20px;
+  box-shadow:0 20px 40px rgba(37,99,255,0.4);
+  animation:float 3s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.landing-title{
+  font-family:'Righteous',cursive;font-size:clamp(2.8rem,7vw,4.5rem);
+  color:#fff;line-height:1;margin-bottom:10px;
+}
+.landing-title span{
+  background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.landing-sub{color:rgba(255,255,255,0.6);font-size:1.05rem;margin-bottom:40px;line-height:1.6;}
+.role-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+.role-card{
+  background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.12);
+  border-radius:20px;padding:28px 20px;cursor:pointer;
+  transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  color:#fff;text-decoration:none;
+}
+.role-card:hover{background:rgba(255,255,255,0.14);transform:translateY(-5px) scale(1.02);border-color:rgba(255,255,255,0.3);}
+.role-icon{font-size:2.5rem;margin-bottom:12px;display:block;}
+.role-title{font-size:1.2rem;font-weight:900;margin-bottom:5px;}
+.role-desc{font-size:0.8rem;opacity:0.6;}
+.role-card.admin-card{background:linear-gradient(135deg,rgba(37,99,255,0.2),rgba(124,58,237,0.2));}
+.role-card.student-card{background:linear-gradient(135deg,rgba(240,4,127,0.2),rgba(255,107,0,0.2));}
+
+/* ===== AUTH MODAL ===== */
+.auth-screen{
+  background:linear-gradient(135deg,#1A1A2E,#0F3460);
+  flex-direction:column;gap:0;
+}
+.auth-box{
+  background:#fff;border-radius:28px;padding:40px;width:100%;max-width:420px;
+  box-shadow:0 30px 80px rgba(0,0,0,0.4);
+  animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.auth-header{text-align:center;margin-bottom:30px;}
+.auth-icon{font-size:2.5rem;margin-bottom:10px;}
+.auth-title{font-family:'Righteous',cursive;font-size:1.8rem;color:var(--dark);}
+.auth-sub{color:var(--gray);font-size:0.88rem;margin-top:5px;}
+.form-group{margin-bottom:18px;}
+.form-label{display:block;font-size:0.82rem;font-weight:800;color:var(--dark);margin-bottom:6px;letter-spacing:0.05em;text-transform:uppercase;}
+.form-input{
+  width:100%;padding:13px 16px;border:2px solid var(--border);
+  border-radius:12px;font-family:'Nunito',sans-serif;font-size:0.95rem;
+  outline:none;transition:border-color 0.2s,box-shadow 0.2s;background:#F9FAFB;
+}
+.form-input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(37,99,255,0.1);background:#fff;}
+.btn{
+  display:block;width:100%;padding:14px;border:none;border-radius:12px;
+  font-family:'Nunito',sans-serif;font-weight:900;font-size:1rem;
+  cursor:pointer;transition:all 0.2s;text-align:center;text-decoration:none;
+}
+.btn-blue{background:var(--grad1);color:#fff;box-shadow:0 8px 20px rgba(37,99,255,0.35);}
+.btn-blue:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(37,99,255,0.45);}
+.btn-pink{background:var(--grad2);color:#fff;box-shadow:0 8px 20px rgba(240,4,127,0.35);}
+.btn-pink:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(240,4,127,0.45);}
+.btn-green{background:var(--green);color:#fff;box-shadow:0 8px 20px rgba(0,200,83,0.35);}
+.btn-green:hover{transform:translateY(-2px);}
+.btn-outline{background:transparent;border:2px solid var(--border);color:var(--gray);}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue);}
+.btn-sm{padding:9px 18px;font-size:0.82rem;width:auto;display:inline-block;border-radius:10px;}
+.btn-danger{background:#FEE2E2;color:var(--red);border:none;}
+.btn-danger:hover{background:var(--red);color:#fff;}
+.back-link{
+  color:rgba(255,255,255,0.5);font-size:0.85rem;cursor:pointer;
+  margin-top:16px;text-align:center;display:block;transition:color 0.2s;
+}
+.back-link:hover{color:#fff;}
+.error-msg{
+  background:#FEE2E2;border:1px solid #FECACA;color:var(--red);
+  border-radius:10px;padding:10px 14px;font-size:0.85rem;margin-bottom:14px;
+}
+
+/* ===== ADMIN PANEL ===== */
+#adminPanel{background:var(--bg);align-items:stretch;padding:0;display:block;}
+.admin-layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh;}
+.sidebar{
+  background:var(--dark);color:#fff;padding:0;
+  display:flex;flex-direction:column;position:sticky;top:0;height:100vh;
+}
+.sidebar-logo{
+  padding:24px 20px;border-bottom:1px solid rgba(255,255,255,0.08);
+  display:flex;align-items:center;gap:12px;
+}
+.sidebar-logo-icon{
+  width:40px;height:40px;background:var(--grad1);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;
+}
+.sidebar-logo-text{font-family:'Righteous',cursive;font-size:1.3rem;color:#fff;}
+.sidebar-nav{flex:1;padding:16px 12px;display:flex;flex-direction:column;gap:4px;}
+.nav-item{
+  display:flex;align-items:center;gap:12px;padding:11px 14px;
+  border-radius:12px;cursor:pointer;transition:all 0.2s;
+  font-weight:700;font-size:0.88rem;color:rgba(255,255,255,0.55);
+}
+.nav-item:hover{background:rgba(255,255,255,0.07);color:#fff;}
+.nav-item.active{background:var(--grad1);color:#fff;box-shadow:0 4px 15px rgba(37,99,255,0.4);}
+.nav-icon{font-size:1.1rem;width:20px;text-align:center;}
+.sidebar-footer{
+  padding:16px 12px;border-top:1px solid rgba(255,255,255,0.08);
+}
+.admin-profile{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  border-radius:12px;background:rgba(255,255,255,0.05);
+}
+.avatar{
+  width:36px;height:36px;border-radius:10px;background:var(--grad2);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;
+}
+.profile-name{font-size:0.85rem;font-weight:800;color:#fff;}
+.profile-role{font-size:0.7rem;color:rgba(255,255,255,0.4);}
+.admin-main{padding:32px;overflow-y:auto;}
+.page-header{margin-bottom:28px;}
+.page-title{font-family:'Righteous',cursive;font-size:1.9rem;color:var(--dark);}
+.page-sub{color:var(--gray);font-size:0.9rem;margin-top:4px;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+.stat-card{
+  background:var(--white);border-radius:18px;padding:22px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.06);
+  display:flex;align-items:center;gap:16px;
+}
+.stat-icon{
+  width:52px;height:52px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;
+}
+.stat-num{font-family:'Righteous',cursive;font-size:1.8rem;line-height:1;}
+.stat-label{font-size:0.78rem;color:var(--gray);font-weight:700;letter-spacing:0.05em;text-transform:uppercase;margin-top:2px;}
+
+/* ADMIN TABS */
+.admin-tab{display:none;}
+.admin-tab.active{display:block;}
+.card{background:var(--white);border-radius:18px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:20px;}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.card-title{font-size:1rem;font-weight:900;color:var(--dark);}
+
+/* QUIZ FORM */
+.quiz-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-group-full{grid-column:1/-1;}
+select.form-input{cursor:pointer;}
+.questions-list{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
+.question-item{
+  background:#F9FAFB;border:2px solid var(--border);border-radius:14px;padding:18px;
+  position:relative;transition:border-color 0.2s;
+}
+.question-item:hover{border-color:var(--blue);}
+.q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.q-badge{
+  background:var(--grad1);color:#fff;border-radius:8px;
+  padding:4px 12px;font-size:0.75rem;font-weight:800;
+}
+.q-type-badge{
+  font-size:0.72rem;font-weight:800;padding:3px 10px;border-radius:6px;
+}
+.q-type-mcq{background:#DBEAFE;color:var(--blue);}
+.q-type-tf{background:#D1FAE5;color:var(--green);}
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.option-row{display:flex;align-items:center;gap:8px;}
+.option-label{
+  width:28px;height:28px;border-radius:8px;background:var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;
+  flex-shrink:0;
+}
+.option-input{
+  flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:9px;
+  font-family:'Nunito',sans-serif;font-size:0.85rem;outline:none;
+}
+.correct-radio{accent-color:var(--green);}
+.correct-label{font-size:0.75rem;color:var(--green);font-weight:700;}
+
+/* QUIZZES LIST */
+.quiz-list-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;background:#F9FAFB;border-radius:14px;
+  border:1.5px solid var(--border);margin-bottom:10px;
+  transition:all 0.2s;
+}
+.quiz-list-item:hover{border-color:var(--blue);background:#EFF6FF;}
+.ql-info{flex:1;}
+.ql-name{font-weight:800;font-size:0.95rem;color:var(--dark);}
+.ql-meta{display:flex;gap:12px;margin-top:5px;}
+.ql-badge{
+  font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:6px;
+  background:#DBEAFE;color:var(--blue);
+}
+.ql-actions{display:flex;gap:8px;}
+
+/* ROOM CODE */
+.room-code-display{
+  text-align:center;padding:30px;background:linear-gradient(135deg,var(--dark),#0F3460);
+  border-radius:20px;margin:20px 0;
+}
+.rc-label{color:rgba(255,255,255,0.6);font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px;}
+.rc-code{
+  font-family:'Righteous',cursive;font-size:4rem;color:#fff;
+  letter-spacing:0.2em;text-shadow:0 0 30px rgba(37,99,255,0.8);
+}
+.rc-sub{color:rgba(255,255,255,0.5);font-size:0.85rem;margin-top:10px;}
+
+/* LIVE MONITOR */
+.students-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;}
+.student-live-card{
+  background:#fff;border-radius:14px;padding:16px 12px;text-align:center;
+  border:2px solid var(--border);transition:all 0.3s;
+}
+.student-live-card.answered{border-color:var(--green);background:#F0FDF4;}
+.student-live-card.waiting{border-color:var(--yellow);background:#FFFBEB;}
+.slc-avatar{
+  width:46px;height:46px;border-radius:12px;margin:0 auto 8px;
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;
+  background:var(--bg);
+}
+.slc-name{font-size:0.82rem;font-weight:800;color:var(--dark);}
+.slc-status{font-size:0.7rem;margin-top:4px;font-weight:700;}
+.status-answered{color:var(--green);}
+.status-waiting{color:var(--orange);}
+
+/* RESULTS TABLE */
+.results-table{width:100%;border-collapse:collapse;}
+.results-table th{
+  background:#F9FAFB;padding:12px 16px;text-align:left;
+  font-size:0.78rem;font-weight:800;color:var(--gray);letter-spacing:0.08em;text-transform:uppercase;
+  border-bottom:2px solid var(--border);
+}
+.results-table td{
+  padding:14px 16px;border-bottom:1px solid var(--border);font-size:0.88rem;
+}
+.results-table tr:hover td{background:#F9FAFB;}
+.rank-badge{
+  width:28px;height:28px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:900;
+}
+.rank-1{background:#FFD600;color:#000;}
+.rank-2{background:#E5E7EB;color:#555;}
+.rank-3{background:#FED7AA;color:#92400E;}
+.score-bar-wrap{display:flex;align-items:center;gap:10px;}
+.score-bar{height:8px;border-radius:4px;background:var(--green);transition:width 0.6s;}
+.score-bar-bg{flex:1;background:#E5E7EB;border-radius:4px;overflow:hidden;}
+
+/* ===== STUDENT PANEL ===== */
+#studentPanel{background:var(--bg);align-items:stretch;padding:0;display:block;}
+.student-layout{min-height:100vh;display:flex;flex-direction:column;}
+.student-header{
+  background:#fff;border-bottom:2px solid var(--border);
+  padding:14px 24px;display:flex;align-items:center;justify-content:space-between;
+}
+.student-header-logo{font-family:'Righteous',cursive;font-size:1.4rem;color:var(--dark);display:flex;align-items:center;gap:10px;}
+.student-info-pill{
+  background:var(--bg);border-radius:50px;padding:8px 16px;
+  display:flex;align-items:center;gap:8px;font-size:0.85rem;font-weight:700;
+}
+.student-content{flex:1;padding:32px;max-width:700px;margin:0 auto;width:100%;}
+
+/* WAITING ROOM */
+.waiting-room{text-align:center;padding:40px 0;}
+.wr-icon{font-size:4rem;animation:float 2s ease-in-out infinite;margin-bottom:20px;}
+.wr-title{font-family:'Righteous',cursive;font-size:2rem;color:var(--dark);margin-bottom:10px;}
+.wr-sub{color:var(--gray);margin-bottom:30px;}
+.pulse-dot{
+  width:12px;height:12px;background:var(--green);border-radius:50%;
+  display:inline-block;animation:pulse 1.5s ease-in-out infinite;margin-right:8px;
+}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.4);opacity:0.6;}}
+
+/* QUESTION CARD */
+.question-card{
+  background:#fff;border-radius:24px;padding:32px;
+  box-shadow:0 8px 30px rgba(0,0,0,0.08);margin-bottom:20px;
+}
+.q-progress{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.q-prog-label{font-size:0.8rem;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:0.08em;}
+.q-prog-bar-wrap{flex:1;height:8px;background:var(--border);border-radius:4px;margin:0 16px;overflow:hidden;}
+.q-prog-bar{height:100%;background:var(--grad1);border-radius:4px;transition:width 0.4s;}
+.timer-circle{
+  width:52px;height:52px;border-radius:50%;background:var(--grad1);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Righteous',cursive;font-size:1.2rem;color:#fff;
+  box-shadow:0 4px 12px rgba(37,99,255,0.4);flex-shrink:0;
+}
+.timer-circle.urgent{background:var(--grad2);animation:timerPulse 0.5s ease-in-out infinite;}
+@keyframes timerPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+.question-text{
+  font-size:1.3rem;font-weight:800;color:var(--dark);margin-bottom:28px;line-height:1.5;
+}
+.options-list{display:flex;flex-direction:column;gap:12px;}
+.option-btn{
+  display:flex;align-items:center;gap:14px;padding:16px 20px;
+  background:#F9FAFB;border:2px solid var(--border);border-radius:16px;
+  cursor:pointer;transition:all 0.2s;text-align:left;width:100%;
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:0.95rem;
+}
+.option-btn:hover:not(:disabled){background:#EFF6FF;border-color:var(--blue);transform:translateX(4px);}
+.option-btn.selected{background:#EFF6FF;border-color:var(--blue);}
+.option-btn.correct{background:#D1FAE5;border-color:var(--green);}
+.option-btn.wrong{background:#FEE2E2;border-color:var(--red);}
+.option-btn:disabled{cursor:default;}
+.opt-letter{
+  width:34px;height:34px;border-radius:10px;background:var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:900;
+  flex-shrink:0;transition:all 0.2s;
+}
+.option-btn.selected .opt-letter{background:var(--blue);color:#fff;}
+.option-btn.correct .opt-letter{background:var(--green);color:#fff;}
+.option-btn.wrong .opt-letter{background:var(--red);color:#fff;}
+.tf-buttons{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.tf-btn{
+  padding:28px;border-radius:20px;border:none;cursor:pointer;
+  font-family:'Righteous',cursive;font-size:1.8rem;
+  transition:all 0.2s;text-align:center;
+}
+.tf-btn.true-btn{background:#D1FAE5;color:var(--green);}
+.tf-btn.false-btn{background:#FEE2E2;color:var(--red);}
+.tf-btn:hover:not(:disabled){transform:scale(1.04);}
+.tf-btn.selected.true-btn{background:var(--green);color:#fff;box-shadow:0 8px 20px rgba(0,200,83,0.4);}
+.tf-btn.selected.false-btn{background:var(--red);color:#fff;box-shadow:0 8px 20px rgba(255,59,59,0.4);}
+
+/* RESULT SCREEN */
+.result-card{
+  background:#fff;border-radius:24px;padding:40px;text-align:center;
+  box-shadow:0 8px 30px rgba(0,0,0,0.08);
+}
+.result-trophy{font-size:5rem;margin-bottom:16px;animation:float 2s ease-in-out infinite;}
+.result-score-circle{
+  width:140px;height:140px;border-radius:50%;
+  background:var(--grad1);margin:20px auto;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 12px 35px rgba(37,99,255,0.4);
+}
+.result-score-num{font-family:'Righteous',cursive;font-size:2.8rem;color:#fff;line-height:1;}
+.result-score-label{font-size:0.75rem;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.1em;}
+.result-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:24px 0;}
+.rs-item{background:#F9FAFB;border-radius:14px;padding:16px;}
+.rs-num{font-family:'Righteous',cursive;font-size:1.6rem;}
+.rs-label{font-size:0.75rem;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-top:4px;}
+.correct-color{color:var(--green);}
+.wrong-color{color:var(--red);}
+.rank-color{color:var(--blue);}
+
+/* CONFETTI */
+.confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden;}
+.confetti-piece{
+  position:absolute;top:-10px;width:10px;height:10px;
+  animation:confettiFall linear both;
+  border-radius:2px;
+}
+@keyframes confettiFall{
+  from{transform:translateY(0) rotate(0deg);opacity:1;}
+  to{transform:translateY(110vh) rotate(720deg);opacity:0;}
+}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--dark);color:#fff;padding:12px 24px;border-radius:50px;
+  font-size:0.88rem;font-weight:700;z-index:500;
+  transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  white-space:nowrap;box-shadow:0 8px 25px rgba(0,0,0,0.3);
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .admin-layout{grid-template-columns:1fr;}
+  .sidebar{display:none;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .quiz-form-grid{grid-template-columns:1fr;}
+  .options-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== LANDING ===== -->
+<div id="landingScreen" class="screen">
+  <div class="landing-box">
+    <div class="logo-mark">🎯</div>
+    <h1 class="landing-title">Quiz<span>Master</span></h1>
+    <p class="landing-sub">Live quizzes, real-time results, instant feedback — built for modern classrooms.</p>
+    <div class="role-cards">
+      <div class="role-card admin-card" onclick="showScreen('adminLogin')">
+        <span class="role-icon">👨‍💼</span>
+        <div class="role-title">Admin / Teacher</div>
+        <div class="role-desc">Create quizzes, launch live sessions, view results</div>
+      </div>
+      <div class="role-card student-card" onclick="showScreen('studentLogin')">
+        <span class="role-icon">🎓</span>
+        <div class="role-title">Student</div>
+        <div class="role-desc">Join with room code and answer live questions</div>
+      </div>
+    </div>
+    <p style="color:rgba(255,255,255,0.3);font-size:0.78rem;">Demo: Admin → admin/admin123 &nbsp;|&nbsp; Student → any name + room code</p>
+  </div>
+</div>
+
+<!-- ===== ADMIN LOGIN ===== -->
+<div id="adminLogin" class="screen auth-screen hidden">
+  <div class="auth-box">
+    <div class="auth-header">
+      <div class="auth-icon">👨‍💼</div>
+      <div class="auth-title">Admin Login</div>
+      <div class="auth-sub">Sign in to your teacher dashboard</div>
+    </div>
+    <div id="adminLoginError" class="error-msg hidden"></div>
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input class="form-input" id="adminUser" placeholder="Enter username" value="admin"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="adminPass" placeholder="Enter password" value="admin123"/>
+    </div>
+    <button class="btn btn-blue" onclick="adminLogin()">Sign In →</button>
+    <span class="back-link" onclick="showScreen('landingScreen')">← Back to Home</span>
+  </div>
+</div>
+
+<!-- ===== STUDENT LOGIN ===== -->
+<div id="studentLogin" class="screen auth-screen hidden">
+  <div class="auth-box">
+    <div class="auth-header">
+      <div class="auth-icon">🎓</div>
+      <div class="auth-title">Join Quiz</div>
+      <div class="auth-sub">Enter your name and room code to join</div>
+    </div>
+    <div id="studentLoginError" class="error-msg hidden"></div>
+    <div class="form-group">
+      <label class="form-label">Your Name</label>
+      <input class="form-input" id="studentName" placeholder="e.g. Ahmed Khan"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Room Code</label>
+      <input class="form-input" id="roomCodeInput" placeholder="e.g. 4829" maxlength="6" style="font-size:1.4rem;font-weight:900;letter-spacing:0.2em;text-align:center;"/>
+    </div>
+    <button class="btn btn-pink" onclick="studentJoin()">Join Room →</button>
+    <span class="back-link" onclick="showScreen('landingScreen')">← Back to Home</span>
+  </div>
+</div>
+
+<!-- ===== ADMIN PANEL ===== -->
+<div id="adminPanel" class="screen hidden">
+  <div class="admin-layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">🎯</div>
+        <span class="sidebar-logo-text">QuizMaster</span>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-item active" onclick="adminTab('dashboard',this)"><span class="nav-icon">📊</span> Dashboard</div>
+        <div class="nav-item" onclick="adminTab('createQuiz',this)"><span class="nav-icon">➕</span> Create Quiz</div>
+        <div class="nav-item" onclick="adminTab('myQuizzes',this)"><span class="nav-icon">📋</span> My Quizzes</div>
+        <div class="nav-item" onclick="adminTab('liveSession',this)"><span class="nav-icon">🔴</span> Live Session</div>
+        <div class="nav-item" onclick="adminTab('results',this)"><span class="nav-icon">🏆</span> Results</div>
+      </div>
+      <div class="sidebar-footer">
+        <div class="admin-profile">
+          <div class="avatar">👨‍💼</div>
+          <div>
+            <div class="profile-name">Admin</div>
+            <div class="profile-role">Teacher</div>
+          </div>
+        </div>
+        <button class="btn btn-outline btn-sm" style="margin-top:10px;width:100%" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="admin-main">
+      <!-- DASHBOARD -->
+      <div id="tab-dashboard" class="admin-tab active">
+        <div class="page-header">
+          <div class="page-title">Dashboard 📊</div>
+          <div class="page-sub">Welcome back! Here's your overview.</div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#EFF6FF">📋</div>
+            <div><div class="stat-num" id="stat-quizzes">0</div><div class="stat-label">Total Quizzes</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#F0FDF4">🎓</div>
+            <div><div class="stat-num" id="stat-students">0</div><div class="stat-label">Students</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#FFF7ED">🔴</div>
+            <div><div class="stat-num" id="stat-sessions">0</div><div class="stat-label">Sessions Run</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#FDF4FF">⭐</div>
+            <div><div class="stat-num" id="stat-avg">0%</div><div class="stat-label">Avg Score</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">🚀 Quick Actions</div></div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <button class="btn btn-blue btn-sm" onclick="adminTab('createQuiz',null)">➕ Create New Quiz</button>
+            <button class="btn btn-pink btn-sm" onclick="adminTab('liveSession',null)">🔴 Start Live Session</button>
+            <button class="btn btn-green btn-sm" onclick="adminTab('results',null)">📊 View Results</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">📋 Recent Quizzes</div></div>
+          <div id="dashRecentQuizzes"><p style="color:var(--gray);font-size:0.9rem;">No quizzes yet. Create your first quiz!</p></div>
+        </div>
+      </div>
+
+      <!-- CREATE QUIZ -->
+      <div id="tab-createQuiz" class="admin-tab">
+        <div class="page-header">
+          <div class="page-title">Create Quiz ➕</div>
+          <div class="page-sub">Build a new quiz with MCQ and True/False questions.</div>
+        </div>
+        <div class="card">
+          <div class="quiz-form-grid">
+            <div class="form-group">
+              <label class="form-label">Quiz Title</label>
+              <input class="form-input" id="quizTitle" placeholder="e.g. Science Chapter 5"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Subject</label>
+              <input class="form-input" id="quizSubject" placeholder="e.g. Biology"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Time per Question (seconds)</label>
+              <select class="form-input" id="quizTime">
+                <option value="10">10 seconds</option>
+                <option value="15">15 seconds</option>
+                <option value="20" selected>20 seconds</option>
+                <option value="30">30 seconds</option>
+                <option value="45">45 seconds</option>
+                <option value="60">60 seconds</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Add Question Type</label>
+              <div style="display:flex;gap:8px;">
+                <button class="btn btn-blue btn-sm" onclick="addQuestion('mcq')">➕ MCQ</button>
+                <button class="btn btn-green btn-sm" onclick="addQuestion('tf')">➕ True/False</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="questionsList" class="questions-list"></div>
+        <div style="margin-top:20px;display:flex;gap:12px;">
+          <button class="btn btn-blue" style="max-width:200px" onclick="saveQuiz()">💾 Save Quiz</button>
+          <button class="btn btn-outline" style="max-width:160px" onclick="clearQuizForm()">🗑️ Clear</button>
+        </div>
+      </div>
+
+      <!-- MY QUIZZES -->
+      <div id="tab-myQuizzes" class="admin-tab">
+        <div class="page-header">
+          <div class="page-title">My Quizzes 📋</div>
+          <div class="page-sub">Manage and launch your quizzes.</div>
+        </div>
+        <div class="card">
+          <div id="quizzesList"><p style="color:var(--gray);font-size:0.9rem;">No quizzes yet. Create your first!</p></div>
+        </div>
+      </div>
+
+      <!-- LIVE SESSION -->
+      <div id="tab-liveSession" class="admin-tab">
+        <div class="page-header">
+          <div class="page-title">Live Session 🔴</div>
+          <div class="page-sub">Launch a quiz and monitor students in real-time.</div>
+        </div>
+        <div id="liveSessionContent">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Select Quiz to Launch</div></div>
+            <div id="launchQuizList"><p style="color:var(--gray);font-size:0.9rem;">No quizzes available. Create one first.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="tab-results" class="admin-tab">
+        <div class="page-header">
+          <div class="page-title">Results 🏆</div>
+          <div class="page-sub">View student performance and scores.</div>
+        </div>
+        <div class="card">
+          <div id="resultsContent"><p style="color:var(--gray);font-size:0.9rem;">No results yet. Run a live session first.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== STUDENT PANEL ===== -->
+<div id="studentPanel" class="screen hidden">
+  <div class="student-layout">
+    <div class="student-header">
+      <div class="student-header-logo">🎯 QuizMaster</div>
+      <div class="student-info-pill">
+        <span>🎓</span>
+        <span id="studentNameDisplay">Student</span>
+      </div>
+    </div>
+    <div class="student-content">
+
+      <!-- WAITING ROOM -->
+      <div id="studentWaiting">
+        <div class="waiting-room">
+          <div class="wr-icon">⏳</div>
+          <div class="wr-title">Waiting for Quiz...</div>
+          <p class="wr-sub">Your teacher will start the quiz soon. Stay ready!</p>
+          <p style="font-size:0.88rem;color:var(--gray);"><span class="pulse-dot"></span>Connected to room</p>
+          <div style="margin-top:24px;background:#fff;border-radius:16px;padding:20px;text-align:center;">
+            <p style="font-size:0.78rem;color:var(--gray);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">Your Room Code</p>
+            <p id="studentRoomCode" style="font-family:'Righteous',cursive;font-size:3rem;color:var(--blue);letter-spacing:0.2em;"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUESTION -->
+      <div id="studentQuestion" class="hidden">
+        <div class="question-card">
+          <div class="q-progress">
+            <span class="q-prog-label" id="qProgressLabel">Q 1/5</span>
+            <div class="q-prog-bar-wrap"><div class="q-prog-bar" id="qProgBar" style="width:20%"></div></div>
+            <div class="timer-circle" id="timerCircle">20</div>
+          </div>
+          <p class="question-text" id="questionText">Loading question...</p>
+          <div id="answersContainer"></div>
+        </div>
+      </div>
+
+      <!-- ANSWER FEEDBACK -->
+      <div id="studentFeedback" class="hidden">
+        <div class="question-card" style="text-align:center;">
+          <div id="feedbackIcon" style="font-size:4rem;margin-bottom:16px;"></div>
+          <div id="feedbackText" style="font-family:'Righteous',cursive;font-size:1.8rem;margin-bottom:8px;"></div>
+          <div id="feedbackSub" style="color:var(--gray);font-size:0.95rem;"></div>
+          <div style="margin-top:20px;background:#F9FAFB;border-radius:14px;padding:16px;">
+            <p style="font-size:0.78rem;color:var(--gray);margin-bottom:6px;">CORRECT ANSWER</p>
+            <p id="correctAnswerDisplay" style="font-weight:800;font-size:1rem;color:var(--dark);"></p>
+          </div>
+          <p style="margin-top:16px;color:var(--gray);font-size:0.85rem;">⏳ Next question coming up...</p>
+        </div>
+      </div>
+
+      <!-- STUDENT RESULT -->
+      <div id="studentResult" class="hidden">
+        <div class="result-card">
+          <div class="result-trophy" id="resultTrophy">🏆</div>
+          <div style="font-family:'Righteous',cursive;font-size:2rem;color:var(--dark);">Quiz Complete!</div>
+          <div class="result-score-circle">
+            <div class="result-score-num" id="finalScoreNum">0</div>
+            <div class="result-score-label">Score</div>
+          </div>
+          <div class="result-stats">
+            <div class="rs-item"><div class="rs-num correct-color" id="rsCorrect">0</div><div class="rs-label">Correct</div></div>
+            <div class="rs-item"><div class="rs-num wrong-color" id="rsWrong">0</div><div class="rs-label">Wrong</div></div>
+            <div class="rs-item"><div class="rs-num rank-color" id="rsRank">#1</div><div class="rs-label">Rank</div></div>
+          </div>
+          <button class="btn btn-blue" onclick="showScreen('landingScreen')">🏠 Back to Home</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CONFETTI -->
+<div class="confetti-wrap" id="confettiWrap"></div>
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== STATE =====
+const state = {
+  quizzes: [],
+  sessions: [],
+  results: [],
+  activeSession: null,
+  currentStudent: null,
+  currentRoom: null,
+  questionTimer: null,
+  autoTimer: null,
+};
+
+// Demo quiz pre-loaded
+state.quizzes = [
+  {
+    id: 'q1', title: 'General Knowledge', subject: 'GK', timePerQ: 20,
+    questions: [
+      {type:'mcq', text:'What is the capital of Pakistan?', options:['Lahore','Karachi','Islamabad','Peshawar'], correct:2},
+      {type:'mcq', text:'How many planets are in our solar system?', options:['7','8','9','10'], correct:1},
+      {type:'tf', text:'The Sun is a planet.', correct: false},
+      {type:'mcq', text:'Which is the largest ocean?', options:['Atlantic','Indian','Arctic','Pacific'], correct:3},
+      {type:'tf', text:'Water boils at 100°C at sea level.', correct: true},
+    ]
+  }
+];
+
+// ===== UTILS =====
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+function showToast(msg, dur=2800) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+function genId() { return Math.random().toString(36).substr(2,9); }
+function genRoomCode() { return Math.floor(1000+Math.random()*9000).toString(); }
+
+// ===== AUTH =====
+function adminLogin() {
+  const u = document.getElementById('adminUser').value.trim();
+  const p = document.getElementById('adminPass').value.trim();
+  const err = document.getElementById('adminLoginError');
+  if (u === 'admin' && p === 'admin123') {
+    err.classList.add('hidden');
+    showScreen('adminPanel');
+    refreshAdminUI();
+    showToast('✅ Welcome back, Admin!');
+  } else {
+    err.textContent = '❌ Invalid username or password. Try admin / admin123';
+    err.classList.remove('hidden');
+  }
+}
+function studentJoin() {
+  const name = document.getElementById('studentName').value.trim();
+  const code = document.getElementById('roomCodeInput').value.trim();
+  const err = document.getElementById('studentLoginError');
+  if (!name) { err.textContent='Please enter your name.'; err.classList.remove('hidden'); return; }
+  if (!code) { err.textContent='Please enter the room code.'; err.classList.remove('hidden'); return; }
+  const session = state.sessions.find(s => s.roomCode === code && s.active);
+  if (!session) { err.textContent='❌ Room not found or quiz not started yet. Ask your teacher!'; err.classList.remove('hidden'); return; }
+  err.classList.add('hidden');
+  state.currentStudent = { id: genId(), name, score:0, correct:0, wrong:0 };
+  state.currentRoom = session;
+  session.students.push(state.currentStudent);
+  document.getElementById('studentNameDisplay').textContent = name;
+  document.getElementById('studentRoomCode').textContent = code;
+  showScreen('studentPanel');
+  showToast('🎉 Joined room ' + code + '!');
+  // Auto-start question if session already in progress
+  if (session.currentQ >= 0) {
+    startStudentQuestion(session.currentQ);
+  } else {
+    startStudentQuestionLoop();
+  }
+}
+function logout() { showScreen('landingScreen'); showToast('👋 Logged out!'); }
+
+// ===== ADMIN TABS =====
+function adminTab(tab, el) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  else {
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.textContent.toLowerCase().includes(tab.toLowerCase().replace(/([A-Z])/g,' $1').trim().split(' ')[0])) n.classList.add('active');
+    });
+  }
+  if (tab === 'myQuizzes') renderMyQuizzes();
+  if (tab === 'liveSession') renderLaunchList();
+  if (tab === 'results') renderResults();
+  if (tab === 'dashboard') refreshAdminUI();
+}
+
+// ===== CREATE QUIZ =====
+let editingQuestions = [];
+function addQuestion(type) {
+  const q = type === 'mcq'
+    ? {id:genId(), type:'mcq', text:'', options:['','','',''], correct:0}
+    : {id:genId(), type:'tf', text:'', correct:true};
+  editingQuestions.push(q);
+  renderQList();
+}
+function renderQList() {
+  const el = document.getElementById('questionsList');
+  if (!editingQuestions.length) { el.innerHTML='<p style="color:var(--gray);font-size:0.9rem;text-align:center;padding:20px">No questions yet. Click ➕ MCQ or ➕ True/False to add.</p>'; return; }
+  el.innerHTML = editingQuestions.map((q,i) => `
+    <div class="question-item">
+      <div class="q-header">
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="q-badge">Q${i+1}</span>
+          <span class="q-type-badge ${q.type==='mcq'?'q-type-mcq':'q-type-tf'}">${q.type==='mcq'?'MCQ':'True/False'}</span>
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="removeQ('${q.id}')">🗑️</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Question Text</label>
+        <input class="form-input" placeholder="Type your question..." value="${q.text}"
+          onchange="updateQ('${q.id}','text',this.value)"/>
+      </div>
+      ${q.type==='mcq' ? renderMCQOptions(q) : renderTFOptions(q)}
+    </div>`).join('');
+}
+function renderMCQOptions(q) {
+  const letters = ['A','B','C','D'];
+  return `<div class="options-grid">
+    ${q.options.map((opt,i) => `
+      <div class="option-row">
+        <div class="option-label">${letters[i]}</div>
+        <input class="option-input" placeholder="Option ${letters[i]}" value="${opt}"
+          onchange="updateQOption('${q.id}',${i},this.value)"/>
+        <input type="radio" class="correct-radio" name="correct_${q.id}" ${q.correct===i?'checked':''}
+          onchange="updateQ('${q.id}','correct',${i})" title="Correct answer"/>
+        <label class="correct-label">${q.correct===i?'✓':''}</label>
+      </div>`).join('')}
+  </div>`;
+}
+function renderTFOptions(q) {
+  return `<div style="display:flex;gap:16px;margin-top:8px;">
+    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:700;">
+      <input type="radio" name="tf_${q.id}" ${q.correct===true?'checked':''} onchange="updateQ('${q.id}','correct',true)" class="correct-radio"/> ✅ True
+    </label>
+    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:700;">
+      <input type="radio" name="tf_${q.id}" ${q.correct===false?'checked':''} onchange="updateQ('${q.id}','correct',false)" class="correct-radio"/> ❌ False
+    </label>
+  </div>`;
+}
+function updateQ(id, field, val) { const q = editingQuestions.find(q=>q.id===id); if(q) q[field]=val; }
+function updateQOption(id, idx, val) { const q = editingQuestions.find(q=>q.id===id); if(q) q.options[idx]=val; }
+function removeQ(id) { editingQuestions = editingQuestions.filter(q=>q.id!==id); renderQList(); }
+function clearQuizForm() {
+  editingQuestions=[];
+  document.getElementById('quizTitle').value='';
+  document.getElementById('quizSubject').value='';
+  renderQList();
+}
+function saveQuiz() {
+  const title = document.getElementById('quizTitle').value.trim();
+  const subject = document.getElementById('quizSubject').value.trim();
+  const timePerQ = parseInt(document.getElementById('quizTime').value);
+  if (!title) { showToast('⚠️ Please enter a quiz title!'); return; }
+  if (editingQuestions.length < 1) { showToast('⚠️ Add at least 1 question!'); return; }
+  for (let q of editingQuestions) {
+    if (!q.text.trim()) { showToast('⚠️ Fill in all question texts!'); return; }
+    if (q.type==='mcq' && q.options.some(o=>!o.trim())) { showToast('⚠️ Fill in all MCQ options!'); return; }
+  }
+  const quiz = { id:genId(), title, subject, timePerQ, questions:[...editingQuestions], createdAt: new Date().toLocaleDateString() };
+  state.quizzes.push(quiz);
+  showToast('✅ Quiz "'+title+'" saved!');
+  clearQuizForm();
+  refreshAdminUI();
+  adminTab('myQuizzes', null);
+}
+
+// ===== MY QUIZZES =====
+function renderMyQuizzes() {
+  const el = document.getElementById('quizzesList');
+  if (!state.quizzes.length) { el.innerHTML='<p style="color:var(--gray)">No quizzes yet.</p>'; return; }
+  el.innerHTML = state.quizzes.map(q => `
+    <div class="quiz-list-item">
+      <div class="ql-info">
+        <div class="ql-name">${q.title}</div>
+        <div class="ql-meta">
+          <span class="ql-badge">📚 ${q.subject||'General'}</span>
+          <span class="ql-badge" style="background:#D1FAE5;color:var(--green)">❓ ${q.questions.length} Qs</span>
+          <span class="ql-badge" style="background:#FFF7ED;color:var(--orange)">⏱️ ${q.timePerQ}s/Q</span>
+        </div>
+      </div>
+      <div class="ql-actions">
+        <button class="btn btn-pink btn-sm" onclick="launchQuiz('${q.id}')">🚀 Launch</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteQuiz('${q.id}')">🗑️</button>
+      </div>
+    </div>`).join('');
+}
+function deleteQuiz(id) {
+  state.quizzes = state.quizzes.filter(q=>q.id!==id);
+  renderMyQuizzes();
+  showToast('🗑️ Quiz deleted!');
+  refreshAdminUI();
+}
+
+// ===== LAUNCH SESSION =====
+function renderLaunchList() {
+  const el = document.getElementById('launchQuizList');
+  if (!state.quizzes.length) { el.innerHTML='<p style="color:var(--gray)">No quizzes available.</p>'; return; }
+  if (state.activeSession) { renderLiveMonitor(); return; }
+  el.innerHTML = state.quizzes.map(q => `
+    <div class="quiz-list-item">
+      <div class="ql-info">
+        <div class="ql-name">${q.title}</div>
+        <div class="ql-meta">
+          <span class="ql-badge">❓ ${q.questions.length} Questions</span>
+          <span class="ql-badge" style="background:#FFF7ED;color:var(--orange)">⏱️ ${q.timePerQ}s/Q</span>
+        </div>
+      </div>
+      <button class="btn btn-green btn-sm" onclick="launchQuiz('${q.id}')">🚀 Start Live</button>
+    </div>`).join('');
+}
+function launchQuiz(quizId) {
+  const quiz = state.quizzes.find(q=>q.id===quizId);
+  if (!quiz) return;
+  const roomCode = genRoomCode();
+  const session = { id:genId(), quizId, quiz, roomCode, students:[], active:true, currentQ:-1, answers:{} };
+  state.sessions.push(session);
+  state.activeSession = session;
+  showToast('🚀 Quiz launched! Room: '+roomCode);
+  adminTab('liveSession', null);
+  renderLiveMonitor();
+  // Auto-start first question after 3s
+  setTimeout(() => nextAdminQuestion(), 3000);
+}
+function renderLiveMonitor() {
+  const s = state.activeSession;
+  if (!s) return;
+  const el = document.getElementById('liveSessionContent');
+  const qIdx = s.currentQ;
+  const quiz = s.quiz;
+  const q = qIdx >= 0 ? quiz.questions[qIdx] : null;
+  el.innerHTML = `
+    <div class="room-code-display">
+      <div class="rc-label">Students join with room code</div>
+      <div class="rc-code">${s.roomCode}</div>
+      <div class="rc-sub">💬 Share this code with your students</div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          ${qIdx < 0 ? '⏳ Waiting to start...' : `📝 Question ${qIdx+1} / ${quiz.questions.length}`}
+          ${q ? `— <span style="font-weight:400;color:var(--gray)">${q.type==='mcq'?'MCQ':'True/False'}</span>` : ''}
+        </div>
+        <div style="display:flex;gap:8px">
+          ${qIdx < quiz.questions.length-1 ? `<button class="btn btn-blue btn-sm" onclick="nextAdminQuestion()">Next Question →</button>` : ''}
+          ${qIdx === quiz.questions.length-1 ? `<button class="btn btn-green btn-sm" onclick="endSession()">✅ End Quiz</button>` : ''}
+          <button class="btn btn-danger btn-sm" onclick="endSession()">⛔ Stop</button>
+        </div>
+      </div>
+      ${q ? `<div style="background:#F9FAFB;border-radius:12px;padding:16px;margin-bottom:16px;font-weight:700">${q.text}</div>` : ''}
+      <div class="card-title" style="margin-bottom:12px;">👥 Students (${s.students.length})</div>
+      <div class="students-grid" id="studentsGrid">
+        ${s.students.length ? s.students.map(st => {
+          const ans = s.answers[st.id] && s.answers[st.id][qIdx] !== undefined;
+          return `<div class="student-live-card ${ans?'answered':'waiting'}">
+            <div class="slc-avatar">🎓</div>
+            <div class="slc-name">${st.name}</div>
+            <div class="slc-status ${ans?'status-answered':'status-waiting'}">${ans?'✅ Answered':'⏳ Waiting'}</div>
+          </div>`;
+        }).join('') : '<p style="color:var(--gray);font-size:0.85rem">No students yet...</p>'}
+      </div>
+    </div>`;
+}
+function nextAdminQuestion() {
+  const s = state.activeSession;
+  if (!s) return;
+  s.currentQ++;
+  if (s.currentQ >= s.quiz.questions.length) { endSession(); return; }
+  renderLiveMonitor();
+  // Auto-advance after timePerQ
+  clearTimeout(state.autoTimer);
+  state.autoTimer = setTimeout(() => {
+    if (state.activeSession && state.activeSession.id === s.id) nextAdminQuestion();
+  }, (s.quiz.timePerQ + 3) * 1000);
+}
+function endSession() {
+  const s = state.activeSession;
+  if (!s) return;
+  clearTimeout(state.autoTimer);
+  s.active = false;
+  // Calculate results
+  s.students.forEach(st => {
+    let correct=0, wrong=0;
+    s.quiz.questions.forEach((q,i) => {
+      const ans = s.answers[st.id] && s.answers[st.id][i];
+      if (ans !== undefined) {
+        const isCorrect = q.type==='mcq' ? ans === q.correct : ans === q.correct;
+        if (isCorrect) correct++; else wrong++;
+      }
+    });
+    const total = s.quiz.questions.length;
+    const score = Math.round((correct/total)*100);
+    state.results.push({ sessionId:s.id, quizTitle:s.quiz.title, studentName:st.name, correct, wrong, total, score, date:new Date().toLocaleDateString() });
+    st.score = score; st.correct = correct; st.wrong = wrong;
+  });
+  state.activeSession = null;
+  state.sessions.find(se=>se.id===s.id).active = false;
+  showToast('✅ Quiz ended! Results saved.');
+  refreshAdminUI();
+  renderResults();
+  adminTab('results', null);
+}
+
+// ===== RESULTS =====
+function renderResults() {
+  const el = document.getElementById('resultsContent');
+  if (!state.results.length) { el.innerHTML='<p style="color:var(--gray)">No results yet.</p>'; return; }
+  // Group by session
+  const sorted = [...state.results].sort((a,b)=>b.score-a.score);
+  el.innerHTML = `<table class="results-table">
+    <thead><tr>
+      <th>Rank</th><th>Student</th><th>Quiz</th><th>Score</th><th>Correct</th><th>Wrong</th><th>Date</th>
+    </tr></thead>
+    <tbody>
+      ${sorted.map((r,i) => `<tr>
+        <td><div class="rank-badge ${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':''}" style="${i>2?'background:#F9FAFB;color:#6B7280':''}">#${i+1}</div></td>
+        <td><strong>${r.studentName}</strong></td>
+        <td>${r.quizTitle}</td>
+        <td>
+          <div class="score-bar-wrap">
+            <div class="score-bar-bg"><div class="score-bar" style="width:${r.score}%"></div></div>
+            <strong style="color:var(--green);min-width:40px">${r.score}%</strong>
+          </div>
+        </td>
+        <td style="color:var(--green);font-weight:700">✅ ${r.correct}</td>
+        <td style="color:var(--red);font-weight:700">❌ ${r.wrong}</td>
+        <td style="color:var(--gray)">${r.date}</td>
+      </tr>`).join('')}
+    </tbody></table>`;
+}
+
+// ===== REFRESH ADMIN UI =====
+function refreshAdminUI() {
+  document.getElementById('stat-quizzes').textContent = state.quizzes.length;
+  document.getElementById('stat-students').textContent = state.results.length;
+  document.getElementById('stat-sessions').textContent = state.sessions.length;
+  const avg = state.results.length ? Math.round(state.results.reduce((a,r)=>a+r.score,0)/state.results.length) : 0;
+  document.getElementById('stat-avg').textContent = avg+'%';
+  const dEl = document.getElementById('dashRecentQuizzes');
+  if (state.quizzes.length) {
+    dEl.innerHTML = state.quizzes.slice(-3).reverse().map(q=>`
+      <div class="quiz-list-item" style="margin-bottom:8px">
+        <div class="ql-info"><div class="ql-name">${q.title}</div>
+          <div class="ql-meta"><span class="ql-badge">❓ ${q.questions.length} Qs</span></div>
+        </div>
+        <button class="btn btn-pink btn-sm" onclick="launchQuiz('${q.id}')">🚀 Launch</button>
+      </div>`).join('');
+  }
+}
+
+// ===== STUDENT QUESTION LOOP =====
+function startStudentQuestionLoop() {
+  // Poll for session start
+  const interval = setInterval(() => {
+    const s = state.currentRoom;
+    if (!s) { clearInterval(interval); return; }
+    if (!s.active) { clearInterval(interval); showStudentResult(); return; }
+    if (s.currentQ >= 0) {
+      clearInterval(interval);
+      startStudentQuestion(s.currentQ);
+    }
+  }, 500);
+}
+
+let studentQIndex = -1;
+function startStudentQuestion(qIdx) {
+  studentQIndex = qIdx;
+  const s = state.currentRoom;
+  const quiz = s.quiz;
+  const q = quiz.questions[qIdx];
+  const total = quiz.questions.length;
+
+  document.getElementById('studentWaiting').classList.add('hidden');
+  document.getElementById('studentFeedback').classList.add('hidden');
+  document.getElementById('studentResult').classList.add('hidden');
+  document.getElementById('studentQuestion').classList.remove('hidden');
+
+  document.getElementById('qProgressLabel').textContent = `Q ${qIdx+1} / ${total}`;
+  document.getElementById('qProgBar').style.width = ((qIdx+1)/total*100)+'%';
+  document.getElementById('questionText').textContent = q.text;
+
+  // Render answers
+  const ac = document.getElementById('answersContainer');
+  if (q.type === 'mcq') {
+    const letters = ['A','B','C','D'];
+    ac.innerHTML = `<div class="options-list">
+      ${q.options.map((opt,i) => `
+        <button class="option-btn" onclick="submitAnswer(${i})" id="opt${i}">
+          <span class="opt-letter">${letters[i]}</span>${opt}
+        </button>`).join('')}
+    </div>`;
+  } else {
+    ac.innerHTML = `<div class="tf-buttons">
+      <button class="tf-btn true-btn" onclick="submitAnswer(true)" id="optTrue">✅ TRUE</button>
+      <button class="tf-btn false-btn" onclick="submitAnswer(false)" id="optFalse">❌ FALSE</button>
+    </div>`;
+  }
+
+  // Timer
+  let timeLeft = quiz.timePerQ;
+  const timerEl = document.getElementById('timerCircle');
+  timerEl.textContent = timeLeft;
+  timerEl.className = 'timer-circle';
+  clearInterval(state.questionTimer);
+  state.questionTimer = setInterval(() => {
+    timeLeft--;
+    timerEl.textContent = timeLeft;
+    if (timeLeft <= 5) timerEl.className = 'timer-circle urgent';
+    if (timeLeft <= 0) {
+      clearInterval(state.questionTimer);
+      submitAnswer(null); // time up = no answer
+    }
+  }, 1000);
+
+  // Listen for next question
+  const nextPoll = setInterval(() => {
+    const cs = state.currentRoom;
+    if (!cs.active) { clearInterval(nextPoll); clearInterval(state.questionTimer); showStudentResult(); return; }
+    if (cs.currentQ > studentQIndex) {
+      clearInterval(nextPoll);
+      clearInterval(state.questionTimer);
+      setTimeout(() => startStudentQuestion(cs.currentQ), 800);
+    }
+  }, 600);
+}
+
+function submitAnswer(answer) {
+  clearInterval(state.questionTimer);
+  const s = state.currentRoom;
+  const quiz = s.quiz;
+  const q = quiz.questions[studentQIndex];
+  const st = state.currentStudent;
+
+  // Disable all buttons
+  document.querySelectorAll('.option-btn, .tf-btn').forEach(b => b.disabled = true);
+
+  if (answer === null) {
+    // Time up
+    showFeedback(false, q, answer, true);
+    return;
+  }
+
+  // Record answer
+  if (!s.answers[st.id]) s.answers[st.id] = {};
+  s.answers[st.id][studentQIndex] = answer;
+
+  const correct = answer === q.correct;
+  if (correct) { st.correct++; } else { st.wrong++; }
+
+  // Highlight
+  if (q.type === 'mcq') {
+    document.querySelectorAll('.option-btn').forEach((btn, i) => {
+      if (i === q.correct) btn.classList.add('correct');
+      else if (i === answer && !correct) btn.classList.add('wrong');
+    });
+  } else {
+    const trueBtn = document.getElementById('optTrue');
+    const falseBtn = document.getElementById('optFalse');
+    if (q.correct === true) trueBtn && trueBtn.classList.add('correct'); else falseBtn && falseBtn.classList.add('correct');
+    if (answer !== q.correct) { (answer ? trueBtn : falseBtn)?.classList.add('wrong'); }
+  }
+
+  setTimeout(() => showFeedback(correct, q, answer, false), 800);
+}
+
+function showFeedback(correct, q, answer, timeUp) {
+  document.getElementById('studentQuestion').classList.add('hidden');
+  document.getElementById('studentFeedback').classList.remove('hidden');
+  if (timeUp) {
+    document.getElementById('feedbackIcon').textContent = '⏰';
+    document.getElementById('feedbackText').textContent = 'Time Up!';
+    document.getElementById('feedbackText').style.color = '#FF6B00';
+    document.getElementById('feedbackSub').textContent = "You didn't answer in time.";
+  } else if (correct) {
+    document.getElementById('feedbackIcon').textContent = '🎉';
+    document.getElementById('feedbackText').textContent = 'Correct!';
+    document.getElementById('feedbackText').style.color = 'var(--green)';
+    document.getElementById('feedbackSub').textContent = '+10 points!';
+  } else {
+    document.getElementById('feedbackIcon').textContent = '😔';
+    document.getElementById('feedbackText').textContent = 'Wrong!';
+    document.getElementById('feedbackText').style.color = 'var(--red)';
+    document.getElementById('feedbackSub').textContent = 'Better luck next time!';
+  }
+  const ca = q.type==='mcq' ? q.options[q.correct] : (q.correct ? '✅ True' : '❌ False');
+  document.getElementById('correctAnswerDisplay').textContent = ca;
+}
+
+function showStudentResult() {
+  document.getElementById('studentWaiting').classList.add('hidden');
+  document.getElementById('studentQuestion').classList.add('hidden');
+  document.getElementById('studentFeedback').classList.add('hidden');
+  document.getElementById('studentResult').classList.remove('hidden');
+
+  const st = state.currentStudent;
+  const total = state.currentRoom.quiz.questions.length;
+  const score = Math.round((st.correct / total) * 100);
+  st.score = score;
+
+  document.getElementById('finalScoreNum').textContent = score + '%';
+  document.getElementById('rsCorrect').textContent = st.correct;
+  document.getElementById('rsWrong').textContent = st.wrong;
+
+  // Rank
+  const allStudents = state.currentRoom.students.sort((a,b)=>b.score-a.score);
+  const rank = allStudents.findIndex(s=>s.id===st.id)+1;
+  document.getElementById('rsRank').textContent = '#'+rank;
+  document.getElementById('resultTrophy').textContent = score>=80?'🏆':score>=60?'🥈':'🎖️';
+
+  if (score >= 60) spawnConfetti();
+}
+
+// ===== CONFETTI =====
+function spawnConfetti() {
+  const wrap = document.getElementById('confettiWrap');
+  wrap.innerHTML = '';
+  const colors = ['#FFD600','#2563FF','#F0047F','#00C853','#FF6B00','#7C3AED'];
+  for (let i = 0; i < 80; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.cssText = `left:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;
+      animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*1.5}s;border-radius:${Math.random()>0.5?'50%':'2px'};`;
+    wrap.appendChild(el);
+  }
+  setTimeout(() => wrap.innerHTML = '', 5000);
+}
+
+// ===== INIT =====
+renderQList();
+refreshAdminUI();
+</script>
+</body>
+</html>
